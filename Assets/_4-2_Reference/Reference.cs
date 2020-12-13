@@ -82,6 +82,9 @@ public class Reference : MonoBehaviour
         Debug.LogFormat("a: {0}, b: {1}", a, b);    // b の中身を変えた事は a に影響しない。値をコピーしているため。
     }
 
+    /// <summary>
+    /// 文字列は参照型であるが、変数そのものに代入した場合は値のコピーと同じ挙動になるという例
+    /// </summary>
     public void Function04()
     {
         string a;
@@ -95,10 +98,45 @@ public class Reference : MonoBehaviour
         Debug.LogFormat("a: {0}, b: {1}", a, b);
     }
 
-    public void Function05(string p)
+    /// <summary>
+    /// 引数の値渡しと参照渡しの違いを示す例
+    /// </summary>
+    public void Function05()
     {
-        int i;
-        if (int.TryParse(p, out i))
+        Vector3 v = Vector3.zero;   // v を宣言し、初期化している
+
+        if (Function06(v))  // 値渡し。引数を初期化していないとコンパイルエラーになる
+        {
+            Debug.Log(v);
+        }
+
+        if (Function06(ref v))    // 参照渡し。引数を初期化していないとコンパイルエラーになる
+        {
+            Debug.Log(v);
+        }
+
+        // 修飾子を ref -> out に変えた場合は、パラメータを渡す時の初期化は必要ないが、受け取ったパラメータを関数内で初期化しなければならない
+    }
+
+    bool Function06(Vector3 v)
+    {
+        v.x = 1;
+        return true;
+    }
+
+    bool Function06(ref Vector3 v)
+    {
+        v.y = 1;
+        return true;
+    }
+
+    /// <summary>
+    /// 参照渡しを実際に使う例
+    /// </summary>
+    /// <param name="p"></param>
+    public void Function07(string p)
+    {
+        if (int.TryParse(p, out int i))
         {
             Debug.Log($"{p} は整数 {i} に変換されました");
         }
