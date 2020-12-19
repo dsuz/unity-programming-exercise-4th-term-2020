@@ -74,20 +74,10 @@ public class PlayerController : MonoBehaviour
             m_rb.velocity = velo;   // 計算した速度ベクトルをセットする
         }
 
-        // ジャンプの入力を取得し、ジャンプ可能な場合はジャンプする
-        if (Input.GetButtonDown("Jump"))
+        // ジャンプの入力を取得し、接地している場合はジャンプする
+        if (Input.GetButtonDown("Jump") && IsGrounded())
         {
-            if (IsGrounded())
-            {
-                Jump();
-                m_jumpCount = 1;
-            }
-            else if (m_jumpCount < m_maxJumpCount)  // 空中でジャンプする
-            {
-                Jump();
-                m_jumpCount += 1;
-                m_anim.SetTrigger("JumpTrigger");
-            }
+            Jump();
         }
 
         // 接地している時のみ攻撃可能
@@ -120,12 +110,10 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void Attack()
     {
-        // ロックオンしている敵がいたらそちらを向く
+        // ロックオンしている敵がいる場合
         if (m_enemyDetector.Target)
         {
-            Vector3 dir = m_enemyDetector.Target.transform.position - this.transform.position;
-            dir.y = 0;  // 上下方向は無視する
-            this.transform.forward = dir;
+            Debug.Log("ロックオンしている敵がいます");
         }
 
         // 攻撃アニメーションを再生し、弾を発射する
