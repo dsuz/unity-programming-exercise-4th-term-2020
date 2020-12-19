@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
             m_rb.velocity = velo;   // 計算した速度ベクトルをセットする
         }
 
-        // ジャンプの入力を取得し、接地している時に押されていたらジャンプする
+        // ジャンプの入力を取得し、ジャンプ可能な場合はジャンプする
         if (Input.GetButtonDown("Jump"))
         {
             if (IsGrounded())
@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
                 Jump();
                 m_jumpCount = 1;
             }
-            else if (m_jumpCount < m_maxJumpCount)
+            else if (m_jumpCount < m_maxJumpCount)  // 空中でジャンプする
             {
                 Jump();
                 m_jumpCount += 1;
