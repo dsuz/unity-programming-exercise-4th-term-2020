@@ -34,3 +34,9 @@ sysinfo.txt
 # Builds
 *.apk
 #*.unitypackage
+
+# Assets
+ExplosiveLLC*
+Kevin Iglesias*
+TetraArts*
+ProBuilder Data*
