@@ -92,8 +92,11 @@ public class PlayerController : MonoBehaviour
         // アニメーションを操作する
         Vector3 velocity = m_rb.velocity;
         velocity.y = 0; // 上下方向の速度は無視する
-        m_anim.SetFloat("Speed", velocity.magnitude);
-        m_anim.SetBool("IsGrounded", IsGrounded());
+        if (m_anim)
+        {
+            m_anim.SetFloat("Speed", velocity.magnitude);
+            m_anim.SetBool("IsGrounded", IsGrounded());
+        }
     }
 
     /// <summary>
