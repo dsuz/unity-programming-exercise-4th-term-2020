@@ -8,7 +8,7 @@ using System.Linq;
 /// https://docs.unity3d.com/ja/2018.4/ScriptReference/EventSystems.IBeginDragHandler.html
 /// （※）左パネルのリストに使えるインターフェイスの一覧がある
 /// </summary>
-public class CardController : MonoBehaviour, IDragHandler, IPointerDownHandler, IBeginDragHandler, IPointerUpHandler
+public class CardController : MonoBehaviour, IDragHandler, IPointerDownHandler, IBeginDragHandler
 {
     /// <summary>テーブルオブジェクト（"TableTag" が付いている UI オブジェクト）</summary>
     GameObject m_table = null;
@@ -37,7 +37,6 @@ public class CardController : MonoBehaviour, IDragHandler, IPointerDownHandler, 
 
         if (currentDeck)
         {
-            m_originDeck = currentDeck.transform;
             message += $"マウスポインタは {currentDeck.name} の上にあります";
         }
         else
@@ -51,7 +50,6 @@ public class CardController : MonoBehaviour, IDragHandler, IPointerDownHandler, 
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
     {
         Debug.Log($"OnBeginDrag: {this.name}");
-        this.transform.SetParent(null);
         this.transform.SetParent(m_table.transform);
     }
 
@@ -71,23 +69,5 @@ public class CardController : MonoBehaviour, IDragHandler, IPointerDownHandler, 
         //（※）EventSystem のインターフェイスを使った通常のプログラミングだと、オブジェクトが重なっている場合は「一番上に描画されているオブジェクト」しかマウスの動きを検出できない。
         // そのため、デッキの上にカードが重なっている場合、デッキ側でマウスの動きを検出できない。そのため EventSystem.current.RaycastAll を使う必要があった。
         // ちなみに Hierarchy 上で下にある UI オブジェクトが前面に描画される。
-    }
-
-    void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
-    {
-        GameObject currentDeck = GetCurrentDeck(eventData);
-
-        // デッキの上でボタンを放していたら、デッキにセットする
-        if (currentDeck)
-        {
-            this.transform.SetParent(currentDeck.transform);
-        }
-        else if (!m_canPutOutOfDeck)
-        {
-            if (m_originDeck)
-            {
-                this.transform.SetParent(m_originDeck); // 元のデッキに戻す
-            }
-        }
     }
 }
