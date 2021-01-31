@@ -4,7 +4,9 @@ using UnityEngine.EventSystems; // この名前空間にあるインターフェ
 using System.Linq;
 
 /// <summary>
-/// インターフェイス一覧
+/// カードを制御するコンポーネント
+/// 
+/// Unity の UI で使えるインターフェイスの一覧
 /// https://docs.unity3d.com/ja/2018.4/ScriptReference/EventSystems.IBeginDragHandler.html
 /// （※）左パネルのリストに使えるインターフェイスの一覧がある
 /// </summary>
