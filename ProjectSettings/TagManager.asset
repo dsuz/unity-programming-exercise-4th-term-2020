@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Collide
   - EnemyTag
+  - DeckTag
+  - TableTag
+  - CardTag
   layers:
   - Default
   - TransparentFX
