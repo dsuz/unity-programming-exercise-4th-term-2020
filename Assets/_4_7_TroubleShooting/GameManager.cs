@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     /// <summary>全ての敵オブジェクトを入れておくための List</summary>
     List<GunEnemyController> m_enemies = null;
     /// <summary>ゲームオーバー時に表示するパネル</summary>
-    [SerializeField] Animator m_gameoverPanel = null;
+    Animator m_gameoverPanel = null;
 
     void Start()
     {
@@ -58,7 +58,10 @@ public class GameManager : MonoBehaviour
         m_audio = GetComponent<AudioSource>();
         m_enemies = GameObject.FindObjectsOfType<GunEnemyController>().ToList();
         m_lifeText.text = string.Format("{0:000}", m_life);
-        m_scoreText.text = string.Format("{0:0000000000}", m_score);
+
+        // ゲームオーバー時に表示するパネルを取得する
+        var gameoverPanelObject = GameObject.Find("GameoverPanel");
+        m_gameoverPanel = gameoverPanelObject.GetComponent<Animator>();
         m_gameoverPanel.gameObject.SetActive(false);
     }
 
@@ -77,6 +80,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void Gameover()
     {
+        Debug.Log("Gameover");
+        // ゲームオーバーになったことを表示する
         m_gameoverPanel.gameObject.SetActive(true);
         m_gameoverPanel.Play("Show");
         m_enemies.ForEach(enemy => enemy.gameObject.SetActive(false));  // LINQ
@@ -110,7 +115,6 @@ public class GameManager : MonoBehaviour
             if (m_currentTargetEnemy)
             {
                 m_score += m_currentTargetEnemy.Hit();
-                m_scoreText.text = string.Format("{0:0000000000}", m_score);
             }
         }
     }
@@ -125,6 +129,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void Hit()
     {
+        Debug.Log("Hit by enemy");
+
         // ライフを減らして表示を更新し、エフェクトを再生する
         m_life -= 1;
         m_lifeText.text = string.Format("{0:000}", m_life);
