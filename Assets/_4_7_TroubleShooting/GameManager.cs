@@ -23,28 +23,26 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject m_gunObject = null;
     /// <summary>銃の操作のために Ray を飛ばす距離</summary>
     [SerializeField] float m_rangeDistance = 100f;
-    /// <summary>現在照準で狙われている敵</summary>
-    GunEnemyController m_currentTargetEnemy = null;
-    /// <summary>発砲した時の効果音</summary>
-    [SerializeField] AudioClip m_gunFireSfx = null;
-    AudioSource m_audio = null;
-    int m_score = 0;
     /// <summary>スコアを表示するための Text (UI)</summary>
     [SerializeField] Text m_scoreText = null;
     /// <summary>ライフの初期値</summary>
     [SerializeField] int m_initialLife = 500;
-    /// <summary>ライフの現在値</summary>
-    int m_life;
     /// <summary>ライフを表示するための Text (UI)</summary>
     [SerializeField] Text m_lifeText = null;
-    /// <summary>カメラを揺らす設定</summary>
-    [SerializeField] Cinemachine.CinemachineImpulseSource m_cameraShakeSource = null;
-    /// <summary>ダメージを受けた時に赤くして表現するためのパネル</summary>
-    [SerializeField] Animator m_hitScreen = null;
+    /// <summary>弾を撃った時に呼び出す処理</summary>
+    [SerializeField] UnityEngine.Events.UnityEvent m_onShoot = null;
+    /// <summary>ゲームスタート時に呼び出す処理</summary>
+    [SerializeField] UnityEngine.Events.UnityEvent m_onGameStart = null;
+    /// <summary>ゲームオーバー時に呼び出す処理</summary>
+    [SerializeField] UnityEngine.Events.UnityEvent m_onGameOver = null;
+    /// <summary>ライフの現在値</summary>
+    int m_life;
+    /// <summary>ゲームのスコア</summary>
+    int m_score = 0;
     /// <summary>全ての敵オブジェクトを入れておくための List</summary>
     List<GunEnemyController> m_enemies = null;
-    /// <summary>ゲームオーバー時に表示するパネル</summary>
-    Animator m_gameoverPanel = null;
+    /// <summary>現在照準で狙われている敵</summary>
+    GunEnemyController m_currentTargetEnemy = null;
 
     void Start()
     {
@@ -55,14 +53,9 @@ public class GameManager : MonoBehaviour
 
         m_life = m_initialLife;
         m_score = 0;
-        m_audio = GetComponent<AudioSource>();
-        m_enemies = GameObject.FindObjectsOfType<GunEnemyController>().ToList();
+        m_enemies = GameObject.FindObjectsOfType<GunEnemyController>().ToList();    // LINQ を使うために配列ではなく List に保存する
         m_lifeText.text = string.Format("{0:000}", m_life);
-
-        // ゲームオーバー時に表示するパネルを取得する
-        var gameoverPanelObject = GameObject.Find("GameoverPanel");
-        m_gameoverPanel = gameoverPanelObject.GetComponent<Animator>();
-        m_gameoverPanel.gameObject.SetActive(false);
+        m_onGameStart.Invoke();
     }
 
     /// <summary>
@@ -71,7 +64,7 @@ public class GameManager : MonoBehaviour
     public void Restart()
     {
         Debug.Log("Restart");
-        m_enemies.ForEach(enemy => enemy.gameObject.SetActive(true));   // LINQ
+        m_enemies.ForEach(enemy => enemy.gameObject.SetActive(true));   // LINQ メソッド
         Start();
     }
 
@@ -82,15 +75,13 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Gameover");
         // ゲームオーバーになったことを表示する
-        m_gameoverPanel.gameObject.SetActive(true);
-        m_gameoverPanel.Play("Show");
-        m_enemies.ForEach(enemy => enemy.gameObject.SetActive(false));  // LINQ
+        m_enemies.ForEach(enemy => enemy.gameObject.SetActive(false));  // LINQ メソッド
+        m_onGameOver.Invoke();
     }
 
     void Update()
     {
         m_crosshairImage.rectTransform.position = Input.mousePosition;
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
@@ -101,20 +92,19 @@ public class GameManager : MonoBehaviour
 
         // 敵が照準に入っているか調べる
         bool isEnemyTargeted = Physics.Raycast(ray, out hit, m_rangeDistance, m_enemyLayer);
-        m_crosshairImage.color = isEnemyTargeted ? m_colorFocus : m_colorNormal;
-        m_currentTargetEnemy = isEnemyTargeted ? hit.collider.gameObject.GetComponent<GunEnemyController>() : null;
+        m_crosshairImage.color = isEnemyTargeted ? m_colorFocus : m_colorNormal;    // 三項演算子 ? を使っている
+        m_currentTargetEnemy = isEnemyTargeted ? hit.collider.gameObject.GetComponent<GunEnemyController>() : null;    // 三項演算子 ? を使っている
 
         if (Input.GetButtonDown("Fire1"))
         {
             // カメラを揺らして効果音を鳴らす
-            m_cameraShakeSource.GenerateImpulse();
-            m_audio.clip = m_gunFireSfx;
-            m_audio.Play();
+            m_onShoot.Invoke();
 
             // 敵に当たったら得点を足して表示を更新する
             if (m_currentTargetEnemy)
             {
                 m_score += m_currentTargetEnemy.Hit();
+                m_scoreText.text = string.Format("{0:0000000000}", m_score);
             }
         }
     }
@@ -130,11 +120,9 @@ public class GameManager : MonoBehaviour
     public void Hit()
     {
         Debug.Log("Hit by enemy");
-
-        // ライフを減らして表示を更新し、エフェクトを再生する
+        // ライフを減らして表示を更新する。
         m_life -= 1;
         m_lifeText.text = string.Format("{0:000}", m_life);
-        m_hitScreen.SetTrigger("Hit");
         
         if (m_life < 1)
         {
