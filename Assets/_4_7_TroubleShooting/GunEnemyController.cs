@@ -20,8 +20,6 @@ public class GunEnemyController : MonoBehaviour
     [SerializeField] Animator m_animator = null;
     /// <summary>攻撃が当たった時に加算される点</summary>
     [SerializeField] int m_score = 100;
-    /// <summary>攻撃時の SFX</summary>
-    [SerializeField] AudioClip m_shotSfx = null;
     /// <summary>キャラクターの状態</summary>
     GunEnemyStatus m_status = GunEnemyStatus.Idle;
     /// <summary>タイマー</summary>
@@ -69,7 +67,6 @@ public class GunEnemyController : MonoBehaviour
                     m_status = GunEnemyStatus.Idle;
                     m_animator.SetTrigger("Fire");
                     m_collider.enabled = false;
-                    AudioSource.PlayClipAtPoint(m_shotSfx, this.transform.position);
                     
                     if (m_onShoot.GetPersistentEventCount() > 0)
                     {
