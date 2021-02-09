@@ -29,12 +29,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] int m_initialLife = 500;
     /// <summary>ライフを表示するための Text (UI)</summary>
     [SerializeField] Text m_lifeText = null;
+    /// <summary>この得点ごとにライフが増える</summary>
+    [SerializeField] int m_scoreIntervalForLifeUp = 5000;
+    int m_nextLifeUpScore = 0;
     /// <summary>弾を撃った時に呼び出す処理</summary>
     [SerializeField] UnityEngine.Events.UnityEvent m_onShoot = null;
     /// <summary>ゲームスタート時に呼び出す処理</summary>
     [SerializeField] UnityEngine.Events.UnityEvent m_onGameStart = null;
     /// <summary>ゲームオーバー時に呼び出す処理</summary>
     [SerializeField] UnityEngine.Events.UnityEvent m_onGameOver = null;
+    /// <summary>ボーナスでライフが増える時に呼び出す処理</summary>
+    [SerializeField] UnityEngine.Events.UnityEvent m_onLifeUp = null;
     /// <summary>ライフの現在値</summary>
     int m_life;
     /// <summary>ゲームのスコア</summary>
@@ -53,12 +58,12 @@ public class GameManager : MonoBehaviour
         m_enemies = GameObject.FindObjectsOfType<GunEnemyController>().ToList();    // LINQ を使うために配列ではなく List に保存する
         m_lifeText.text = string.Format("{0:000}", m_life);
         m_scoreText.text = string.Format("{0:0000000000}", m_score);
+        m_nextLifeUpScore = m_scoreIntervalForLifeUp;
 
         if (m_hideSystemMouseCursor)
         {
             Cursor.visible = false;
         }
-
     }
 
     /// <summary>
@@ -105,6 +110,13 @@ public class GameManager : MonoBehaviour
             if (m_currentTargetEnemy)
             {
                 m_score += m_currentTargetEnemy.Hit();
+                
+                if (m_score > m_nextLifeUpScore)
+                {
+                    m_nextLifeUpScore += m_scoreIntervalForLifeUp;
+                    m_onLifeUp.Invoke();
+                }
+
                 m_scoreText.text = string.Format("{0:0000000000}", m_score);
             }
         }
@@ -129,5 +141,14 @@ public class GameManager : MonoBehaviour
         {
             Gameover();
         }
+    }
+
+    /// <summary>
+    /// ライフを増やす
+    /// </summary>
+    /// <param name="life">増やすライフ</param>
+    public void LifeUp(int life)
+    {
+        m_life += life;
     }
 }
