@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
         m_score = 0;
         m_enemies = GameObject.FindObjectsOfType<GunEnemyController>().ToList();    // LINQ を使うために配列ではなく List に保存する
         m_lifeText.text = string.Format("{0:000}", m_life);
+        m_scoreText.text = string.Format("{0:0000000000}", m_score);
         m_onGameStart.Invoke();
     }
 
@@ -74,7 +75,6 @@ public class GameManager : MonoBehaviour
     void Gameover()
     {
         Debug.Log("Gameover");
-        // ゲームオーバーになったことを表示する
         m_enemies.ForEach(enemy => enemy.gameObject.SetActive(false));  // LINQ メソッド
         m_onGameOver.Invoke();
     }
@@ -97,7 +97,6 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetButtonDown("Fire1"))
         {
-            // カメラを揺らして効果音を鳴らす
             m_onShoot.Invoke();
 
             // 敵に当たったら得点を足して表示を更新する
