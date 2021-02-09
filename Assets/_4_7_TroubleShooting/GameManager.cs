@@ -43,20 +43,16 @@ public class GameManager : MonoBehaviour
     List<GunEnemyController> m_enemies = null;
     /// <summary>現在照準で狙われている敵</summary>
     GunEnemyController m_currentTargetEnemy = null;
-    /// <summary>ライフを表示するための GameObject</summary>
-    GameObject m_lifeObject;
 
     void Start()
     {
         m_onGameStart.Invoke();
 
         m_life = m_initialLife;
-        // m_score = 0;
+        m_score = 0;
         m_enemies = GameObject.FindObjectsOfType<GunEnemyController>().ToList();    // LINQ を使うために配列ではなく List に保存する
-        m_lifeObject = GameObject.Find("LifeText");
-        m_lifeText = m_lifeObject.GetComponent<Text>();
         m_lifeText.text = string.Format("{0:000}", m_life);
-        // m_scoreText.text = string.Format("{0:0000000000}", m_score);
+        m_scoreText.text = string.Format("{0:0000000000}", m_score);
 
         if (m_hideSystemMouseCursor)
         {
@@ -108,7 +104,8 @@ public class GameManager : MonoBehaviour
             // 敵に当たったら得点を足して表示を更新する
             if (m_currentTargetEnemy)
             {
-                m_currentTargetEnemy.Hit();
+                m_score += m_currentTargetEnemy.Hit();
+                m_scoreText.text = string.Format("{0:0000000000}", m_score);
             }
         }
     }
