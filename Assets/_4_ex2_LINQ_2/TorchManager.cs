@@ -26,7 +26,6 @@ public class TorchManager : MonoBehaviour
         }
 
         // 課題: 上記の処理を ForEach メソッドを使って書け
-        m_torches.ToList().ForEach(torch => torch.PlayParticle());
     }
 
     /// <summary>
@@ -41,11 +40,6 @@ public class TorchManager : MonoBehaviour
         }
 
         // 課題: 上記の処理を ForEach メソッドを使って書け
-        m_torches.ToList().ForEach(torch =>
-        {
-            torch.PlayParticle();
-            torch.PlayAnimation("Spin");
-        });
     }
 
     /// <summary>
@@ -56,20 +50,6 @@ public class TorchManager : MonoBehaviour
         m_torches.OrderBy(torch => Vector3.Distance(m_object.position, torch.transform.position)).FirstOrDefault().PlayParticle();
 
         // 課題: 上記の処理を for または foreach 文を使って書け
-        TorchController nearest = null;
-        float nearestDistance = float.MaxValue;
-        
-        foreach(var torch in m_torches)
-        {
-            float distance = Vector3.Distance(torch.transform.position, m_object.position);
-            if (distance < nearestDistance)
-            {
-                nearestDistance = distance;
-                nearest = torch;
-            }
-        }
-
-        nearest.PlayParticle();
     }
 
     /// <summary>
@@ -80,7 +60,6 @@ public class TorchManager : MonoBehaviour
     public void Exercise04(int count)
     {
         // 課題: 関数のコメントに書かれている処理を書け
-        m_torches.OrderBy(torch => Vector3.Distance(m_object.position, torch.transform.position)).Take(count).ToList().ForEach(torch => torch.PlayParticle());
     }
 
     /// <summary>
@@ -91,7 +70,6 @@ public class TorchManager : MonoBehaviour
     public void Exercise05(int count)
     {
         // 課題: 関数のコメントに書かれている処理を書け
-        m_torches.OrderBy(torch => Vector3.Distance(m_object.position, torch.transform.position)).Skip(count - 1).FirstOrDefault().PlayParticle();
     }
 
     /// <summary>
@@ -110,7 +88,6 @@ public class TorchManager : MonoBehaviour
         }
 
         // 課題: 上記の処理を LINQ を使って簡潔に書け。
-        images.Where(image => image.color == Color.red).ToList().ForEach(image => image.color = Color.white);
     }
 
     /// <summary>
@@ -132,9 +109,5 @@ public class TorchManager : MonoBehaviour
         }
 
         // 課題: 上記の処理を LINQ を使って簡潔に書け。
-        images.Select(image => image.color).Distinct().ToList().ForEach(color => Debug.Log(color.ToString()));
-
-        // または
-        images.GroupBy(image => image.color).ToList().ForEach(item => Debug.Log(item.Key.ToString()));
     }
 }
