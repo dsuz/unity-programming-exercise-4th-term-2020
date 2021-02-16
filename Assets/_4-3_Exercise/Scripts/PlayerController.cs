@@ -104,8 +104,12 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void Jump()
     {
-        AudioSource.PlayClipAtPoint(m_jumpSfx, this.transform.position);
         m_rb.AddForce(Vector3.up * m_jumpPower, ForceMode.Impulse);
+
+        if (m_jumpSfx)
+        {
+            AudioSource.PlayClipAtPoint(m_jumpSfx, this.transform.position);
+        }
     }
 
     /// <summary>
@@ -114,14 +118,21 @@ public class PlayerController : MonoBehaviour
     void Attack()
     {
         // ロックオンしている敵がいる場合
-        if (m_enemyDetector.Target)
+        if (m_enemyDetector && m_enemyDetector.Target)
         {
             Debug.Log("ロックオンしている敵がいます");
         }
 
         // 攻撃アニメーションを再生し、弾を発射する
-        m_anim.SetTrigger("AttackTrigger");
-        Instantiate(m_bulletPrefab, m_muzzle.position, m_muzzle.rotation);
+        if (m_anim)
+        {
+            m_anim.SetTrigger("AttackTrigger");
+        }
+
+        if (m_bulletPrefab && m_muzzle)
+        {
+            Instantiate(m_bulletPrefab, m_muzzle.position, m_muzzle.rotation);
+        }
     }
 
     /// <summary>
