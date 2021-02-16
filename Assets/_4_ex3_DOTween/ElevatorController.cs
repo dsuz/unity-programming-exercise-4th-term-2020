@@ -34,16 +34,9 @@ public class ElevatorController : MonoBehaviour
         // 移動が完了したら 3 秒間待つ
         // 3 秒間待ったら、3 秒かけて元の位置に戻る
         // 元の位置に戻ったら 3 秒後にトリガーが有効に戻す
-        
-        //this.transform.position = m_target.position;
 
         m_trigger.enabled = false;
-        Sequence seq = DOTween.Sequence();
-        seq.Append(this.transform.DOMove(m_target.position, m_moveToSeconds))
-            .AppendInterval(m_interval)
-            .Append(this.transform.DOMove(m_initialPosition, m_moveBackSeconds))
-            .AppendInterval(m_interval)
-            .OnComplete(() => m_trigger.enabled = true);
-        seq.Play();
+        this.transform.position = m_target.position;
+        m_trigger.enabled = true;
     }
 }
