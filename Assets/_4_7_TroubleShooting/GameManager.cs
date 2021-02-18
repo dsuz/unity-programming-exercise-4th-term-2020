@@ -50,14 +50,10 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        m_onGameStart.Invoke();
-
-        m_life = m_initialLife;
-        m_score = 0;
-        m_enemies = GameObject.FindObjectsOfType<GunEnemyController>().ToList();    // LINQ を使うために配列ではなく List に保存する
-        m_lifeText.text = string.Format("{0:000}", m_life);
-        m_scoreText.text = string.Format("{0:0000000000}", m_score);
-        m_nextLifeUpScore = m_scoreIntervalForLifeUp;
+        m_enemies = GameObject.FindObjectsOfType<GunEnemyController>().ToList();    // ForEach を使うために配列ではなく List に保存する
+        m_enemies.ForEach(enemy => enemy.gameObject.SetActive(false));
+        RefreshLife();
+        RefreshScore();
 
         if (m_hideSystemMouseCursor)
         {
@@ -66,13 +62,19 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ゲームをやり直す
+    /// ゲームを開始する
     /// </summary>
-    public void Restart()
+    public void StartGame()
     {
-        Debug.Log("Restart");
-        m_enemies.ForEach(enemy => enemy.gameObject.SetActive(true));   // LINQ メソッド
-        Start();
+        Debug.Log("StartGame");
+
+        m_onGameStart.Invoke();
+        m_life = m_initialLife;
+        m_score = 0;
+        RefreshLife();
+        RefreshScore();
+        m_nextLifeUpScore = m_scoreIntervalForLifeUp;
+        m_enemies.ForEach(enemy => enemy.gameObject.SetActive(true));
     }
 
     /// <summary>
@@ -81,7 +83,7 @@ public class GameManager : MonoBehaviour
     void Gameover()
     {
         Debug.Log("Gameover");
-        m_enemies.ForEach(enemy => enemy.gameObject.SetActive(false));  // LINQ メソッド
+        m_enemies.ForEach(enemy => enemy.gameObject.SetActive(false));
         m_onGameOver.Invoke();
     }
 
@@ -116,7 +118,7 @@ public class GameManager : MonoBehaviour
                     m_onLifeUp.Invoke();
                 }
 
-                m_scoreText.text = string.Format("{0:0000000000}", m_score);
+                RefreshScore();
             }
         }
     }
@@ -134,8 +136,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("Hit by enemy");
         // ライフを減らして表示を更新する。
         m_life -= 1;
-        m_lifeText.text = string.Format("{0:000}", m_life);
-        
+        RefreshLife();
+
         if (m_life < 1)
         {
             Gameover();
@@ -149,5 +151,22 @@ public class GameManager : MonoBehaviour
     public void LifeUp(int life)
     {
         m_life += life;
+        RefreshLife();
+    }
+
+    /// <summary>
+    /// ライフ表示を更新する
+    /// </summary>
+    void RefreshLife()
+    {
+        m_lifeText.text = string.Format("{0:000}", m_life);
+    }
+
+    /// <summary>
+    /// スコア表示を更新する
+    /// </summary>
+    void RefreshScore()
+    {
+        m_scoreText.text = string.Format("{0:0000000000}", m_score);
     }
 }

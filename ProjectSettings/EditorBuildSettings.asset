@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/_4_7_TroubleShooting/ShootingGame.unity
+    guid: 5944a5420edb31340ae1a4d71709f8a6
   m_configObjects: {}
