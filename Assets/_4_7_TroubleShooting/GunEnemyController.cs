@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 /// <summary>
 /// 敵を制御するコンポーネント。敵は独立して動いているため、プレハブを増やせば敵を増やすことができる。
@@ -33,6 +30,8 @@ public class GunEnemyController : MonoBehaviour
     Collider m_collider = null;             // Collider は BoxCollider, SphereCollider などの基底クラスである
     /// <summary>敵が銃を撃った時に実行される処理</summary>
     [SerializeField] UnityEngine.Events.UnityEvent m_onShoot = null;
+    /// <summary>敵に攻撃が当たった時に実行される処理</summary>
+    [SerializeField] UnityEngine.Events.UnityEvent m_onHit = null;
 
     /// <summary>
     /// 初期化処理
@@ -103,6 +102,7 @@ public class GunEnemyController : MonoBehaviour
         m_status = GunEnemyStatus.Idle;
         m_animator.SetTrigger("Hit");
         m_collider.enabled = false;
+        m_onHit.Invoke();
         return m_score;
     }
 }
