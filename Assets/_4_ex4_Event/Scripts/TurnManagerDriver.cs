@@ -1,7 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// （テスト的に）ターンを操作するコンポーネント
+/// </summary>
 public class TurnManagerDriver : MonoBehaviour
 {
     public void EndTurn()

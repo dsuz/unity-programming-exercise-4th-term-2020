@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// TurnManager から通知を受け取りたい場合はこれを継承してコンポーネントを作ること。
+/// </summary>
 public class TurnEventSubscriber : MonoBehaviour
 {
     void OnEnable()
