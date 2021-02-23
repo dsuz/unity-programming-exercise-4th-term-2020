@@ -98,9 +98,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerSearchRangeRadius: 5
-  m_walkableLyerMask:
-    serializedVersion: 2
-    m_Bits: 512
   m_moveTime: 0.25
 --- !u!95 &5320470460453726446
 Animator:
@@ -133,6 +130,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4db2dfb14b33aab4683a50c8d53be757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_walkableLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!58 &5320470460453726440
 CircleCollider2D:
   m_ObjectHideFlags: 0

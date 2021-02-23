@@ -1,9 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// ターンベースでのプレイヤー移動を制御するコンポーネント
+/// </summary>
+[RequireComponent(typeof(GridMoveController))]
 public class TurnBasedPlayerController : MonoBehaviour
 {
+    /// <summary>１ターンで動くのにかける時間（単位: 秒）</summary>
     [SerializeField] float m_moveTime = 1f;
     GridMoveController m_gridMove = null;
 
@@ -14,7 +17,7 @@ public class TurnBasedPlayerController : MonoBehaviour
 
     void Update()
     {
-        if (m_gridMove.IsMoving)
+        if (m_gridMove.IsMoving)    // 動いている最中は何もしない
         {
             return;
         }
@@ -24,13 +27,9 @@ public class TurnBasedPlayerController : MonoBehaviour
 
         if (h != 0 || v != 0)
         {
-            // 入力された方向に移動可能か判定する
-            Vector2 destination = (Vector2)this.transform.position + new Vector2(h, v);
-            var col = Physics2D.OverlapCircle(destination, .1f);
-            
-            if (col == null)    // 移動可能
+            // 移動可能ならば移動して、ターンを進める
+            if (m_gridMove.Move((int)h, (int)v, m_moveTime))
             {
-                m_gridMove.Move((int)h, (int)v, m_moveTime);
                 TurnManager.EndTurn();
             }
         }
