@@ -19,11 +19,11 @@ public class TurnEventSubscriber : MonoBehaviour
 
     public virtual void OnEndTurn()
     {
-        Debug.Log("OnEndTurn");
+        Debug.Log($"OnEndTurn #{TurnManager.TurnCount.ToString()}");
     }
 
     public virtual void OnBeginTurn()
     {
-        Debug.Log("OnBeginTurn");
+        Debug.Log($"OnBeginTurn #{TurnManager.TurnCount.ToString()}");
     }
 }

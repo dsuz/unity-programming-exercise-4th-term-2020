@@ -25,7 +25,6 @@ public class TurnManager
     /// </summary>
     public static void BeginTurn()
     {
-        m_turnCount++;
         OnBeginTurn?.Invoke();
         m_isTurnStarted = true;
     }
