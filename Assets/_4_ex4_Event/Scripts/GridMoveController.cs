@@ -29,6 +29,7 @@ public class GridMoveController : MonoBehaviour
             this.transform.position = Vector2.MoveTowards(this.transform.position, m_destination, Time.deltaTime / moveTime);
             yield return new WaitForEndOfFrame();
         }
+
         m_isMoving = false;
     }
 
