@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5320470460453726447}
   - component: {fileID: 5320470460453726440}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: EnemyPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98,6 +98,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerSearchRangeRadius: 5
+  m_walkableLyerMask:
+    serializedVersion: 2
+    m_Bits: 512
   m_moveTime: 0.25
 --- !u!95 &5320470460453726446
 Animator:

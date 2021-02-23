@@ -6,6 +6,7 @@ using System.Linq;
 public class TurnBasedEnemyController : TurnEventSubscriber
 {
     [SerializeField] float m_playerSearchRangeRadius = 5f;
+    [SerializeField] LayerMask m_walkableLyerMask;
     [SerializeField] float m_moveTime = 1f;
     GridMoveController m_gridMove = null;
 
@@ -49,7 +50,7 @@ public class TurnBasedEnemyController : TurnEventSubscriber
 
         // 移動可能か判定する
         Vector2 destination = (Vector2)this.transform.position + new Vector2(x, y);
-        var col = Physics2D.OverlapCircle(destination, .1f);
+        var col = Physics2D.OverlapCircle(destination, .1f, m_walkableLyerMask);
 
         if (col == null)    // 移動可能
         {
